@@ -65,7 +65,9 @@ class NordstromSpider(CrawlSpider):
         old_product_id = old_product_id[0].split("#")[1].strip()
         item['product_id'] = old_product_id
 
-    item['brand'] = response.xpath("//section[@id='brand-title']/h2/a/text()").extract()[0]
+    item['brand'] = response.xpath("//section[@id='brand-title']/h2/a/text()").extract()
+    if len(item['brand']) > 0:
+      item['brand'] = item['brand'][0]
 
     sale_price = response.xpath("//span[contains(@class,'sale-price')]/text()").extract()
     if len(sale_price) > 0:
@@ -97,6 +99,6 @@ class NordstromSpider(CrawlSpider):
     breadcrumbs = breadcrumbs + category
     item['category'] = category[0]
     item['breadcrumbs'] = "-".join(breadcrumbs)
-    item['product_url'] = response.url
+    item['product_url'] = response.url.split("?")[0]
     
     return item
